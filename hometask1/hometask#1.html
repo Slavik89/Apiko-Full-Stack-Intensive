@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">        
+        <title>Hometask#1</title>
+    </head>
+    <body>
+        <script>
+            const fetchPosts = async (link) => {   
+                const response = await fetch(link);
+                const data = await response.json();
+                const dataLength = await data.length;    
+
+                for(var number = 1; number <= dataLength; number++){
+                  document.write(`<a href="${link+number}" target="_self" onclick="fetchPostId(${number})">postId=`+number+`</a><br/>`); 
+                  continue;
+                  };                    
+                };
+            
+            function fetchPostId(number){                                
+                var linkPostId = link+number;                
+                fetch(linkPostId)
+                  .then(responsePostId => responsePostId.json())
+                  .then(dataPostId => console.log(dataPostId))
+                  .catch(error => console.error(error));
+            };
+
+            var link = 'https://jsonplaceholder.typicode.com/posts/';   
+            fetchPosts(link)
+                .catch(error => console.error(`ERROR ${error}`));
+        </script>           
+    </body>
+</html>
