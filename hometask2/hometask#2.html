@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>task2</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
+</head>
+<body>
+    <div id="root" ></div>
+
+    <script type="text/babel">
+    
+    let str = [];
+    let counter = 0;
+    let arrayOfTags, finalHtmlCode, theFirstTag;
+
+    let titleStringArrayFinal = [];
+    let objectLength, atr, atrFinal, atrContainerFeature, atrContainerValue, newTagWithAtr, typeOfVariable;
+    let bgColor ='background-color';
+    let openDiv ='<div>';
+    let closeDiv ='</div>';
+    let openSpan = '<span>';
+    let closeSpan = '</span>';
+    let brTag = '<br>';
+    let undefined;
+
+    function parseArrayToString(arrayOfTags) {
+        arrayOfTags.forEach(function(element, index, arrayOfTags){
+
+            switch(typeof(element)){
+                case 'string':
+                    arrayOfTags[index] = element;
+                    break;
+                case 'object':
+                    if(element.length > 1){
+                        arrayOfTags[index] = element.join("")
+                    } else {
+                        arrayOfTags[index] = element;
+                    }
+                    break;
+            }
+        });
+        return arrayOfTags;
+    }
+
+    function createElement (str1, str2, str3) {
+        str.splice(0,0,str1,str2,str3);
+        composer(str);
+    }
+
+
+    function composer(str){
+
+        let titleStringArray = [];
+        counter++;
+
+        for(let i = 0; i < 3; i++){
+            typeOfVariable = typeof((str[i]));
+
+            switch(typeOfVariable){
+                case 'undefined':
+                    break;
+                case 'string':
+                    switch(str[i]){
+                        case 'div':
+                            if(titleStringArray.length === 0){
+                                titleStringArray.push(openDiv, closeDiv);
+                            } else{
+                                titleStringArray.splice(titleStringArray.length-1, 0, openDiv, closeDiv);
+                            }
+                            break;
+                        case 'span':
+                            if(titleStringArray.length === 0){
+                                titleStringArray.push(openSpan, closeSpan);
+                            } else{
+                                titleStringArray.splice(titleStringArray.length-1, 0, openSpan, closeSpan);
+                            }
+                            break;
+                        case 'br':
+                            titleStringArray.splice(titleStringArray.length-1, 0, brTag);
+                            i = 3;
+                            break;
+                        default:
+                            titleStringArray.splice(titleStringArray.length-1, 0, str[i]);
+                            break;
+                    }
+                    break;
+                case 'object':
+                    objectLength = Object.keys(str[i]).length;                    
+                    if(objectLength === 1){
+                        newTagWithAtr = "";
+                        atrContainerValue = "";
+                        atrFinal= "";
+                        atr = Object.keys(str[i]).toString();
+                        switch(atr){
+                            case 'style':
+                                atrContainerFeature = Object.keys((str[i])['style']);
+                                atrContainerValue = ((str[i])['style'])[atrContainerFeature];
+                                atrFinal = ' style=\"'+bgColor+':'+atrContainerValue+'\"'+'>';
+                                newTagWithAtr = titleStringArray[0].slice(0, (titleStringArray[0]).length-1);
+                                newTagWithAtr = newTagWithAtr + atrFinal;
+                                titleStringArray.splice(0, 1, newTagWithAtr);
+                                break;
+                            case 'textContent':
+                                atrContainerValue = ((str[i])['textContent']);
+                                atrFinal = ' textContent=\"'+atrContainerValue+'\"'+'>';
+                                newTagWithAtr = titleStringArray[0].slice(0, (titleStringArray[0]).length-1);
+                                newTagWithAtr = newTagWithAtr + atrFinal;
+                                titleStringArray.splice(0, 1, newTagWithAtr);
+                                break;
+                        }
+                    } else if(objectLength > 1){
+                        for(let j=0; j<objectLength; j++){
+                            titleStringArrayFinal.splice(titleStringArrayFinal.length-1, 0, str[i][j]);
+                        }
+                    }
+                    break;
+            }
+        }
+        titleStringArrayFinal.push(titleStringArray);
+
+        if(counter === 4){
+            arrayOfTags = titleStringArrayFinal.filter(function(e){return typeof(e) !== 'undefined';});
+            theFirstTag = arrayOfTags[4][0];
+            arrayOfTags[4].shift();
+            arrayOfTags.unshift(theFirstTag);
+
+            arrayOfTags = parseArrayToString(arrayOfTags);
+            finalHtmlCode = arrayOfTags.join("");
+
+            document.write(finalHtmlCode);
+        }else {}
+
+        }
+
+
+var render = ()=> {};
+
+const React = {  
+  createElement,
+  render
+};
+
+var app = 
+  React.createElement('div', { style: { backgroundColor: 'red' }} , [
+    React.createElement('span', undefined, 'Hello world'),
+    React.createElement('br'),
+    'This is just a text node',
+    React.createElement('div', { textContent: 'Text content' }),
+  ]);
+
+React.render(
+  app,
+  document.getElementById('root')
+);
+
+
+    </script>
+</body>
+</html>
